@@ -140,13 +140,9 @@ const TaskBoard = ({ boards, tasks, subTasks, comments }: TaskBoardProps) => {
     const newIndex = boardsId.indexOf(overBoardId);
 
     if (oldIndex !== newIndex) {
-      let data = {
-        activeBoardId,
-        overBoardId,
-      };
       var result;
       startTransition(async () => {
-        result = await swapBoardAction(data);
+        result = await swapBoardAction(activeBoardId, overBoardId);
         toast.success("Successfully update");
       });
     }

@@ -46,7 +46,7 @@ const AssignTags = ({ task, taskId }: {
   taskId: TaskType["id"];
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [selectedValues, setSelectedValues] = React.useState(task?.tags || []);
+  const [selectedValues, setSelectedValues] = React.useState<string[]>(task?.tags || []);
   const [openTagColor, setOpenTagColor] = useState(false);
 
   const [newTagName, setNewTagName] = useState("");
@@ -239,7 +239,7 @@ const AssignTags = ({ task, taskId }: {
         )}
       </CustomPopover>
       <div className="mt-3 flex gap-2">
-        {selectedValues?.map((tag, index) => (
+        {selectedValues?.map((tag: string, index: number) => (
           <Badge
             color={tagsColorMap[tag] as any}
             className="capitalize"

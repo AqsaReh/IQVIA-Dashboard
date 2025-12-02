@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { cn, isLocationMatch, getDynamicPath, translate } from "@/lib/utils";
-import { menusConfig, ModernNavType, } from "@/config/menus";
+import { menusConfig, ModernNavType, MenuItemProps } from "@/config/menus";
 import SingleIconMenu from "./single-icon-menu";
 import { useRouter, usePathname } from "next/navigation";
 import { useSidebar, useThemeStore } from "@/store";
@@ -17,8 +17,10 @@ import MenuOverlayPortal from "./MenuOverlayPortal";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+type MenuItem = MenuItemProps & { onClick?: () => void };
+
 const ModuleSidebar = ({ trans }: { trans: any }) => {
-  const menus = menusConfig?.sidebarNav?.modern || [];
+  const menus: MenuItem[] = (menusConfig?.sidebarNav?.modern || []) as MenuItem[];
   const { subMenu, setSubmenu, collapsed, setCollapsed, sidebarBg } =
     useSidebar();
   const { isRtl } = useThemeStore();
@@ -38,8 +40,9 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
 
   const toggleSubMenu = (index: number) => {
     setActiveIndex(index);
-    if (menus[index].child) {
-      setCurrentSubMenu(menus[index].child);
+    const menuItem: MenuItem | undefined = menus[index];
+    if (menuItem?.child) {
+      setCurrentSubMenu(menuItem.child);
       setSubmenu(false);
       setCollapsed(false);
       if (!isDesktop) {
@@ -51,7 +54,7 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
 
       if (!isDesktop) {
         // when location match need to close the sub menu
-        if (isLocationMatch(menus[index].title, locationName)) {
+        if (menuItem && isLocationMatch(menuItem.title, locationName)) {
           setSubmenu(false);
         }
       }
@@ -91,7 +94,8 @@ const ModuleSidebar = ({ trans }: { trans: any }) => {
   //
   const getMenuTitle = () => {
     if (activeIndex !== null) {
-      return menus[activeIndex].title;
+      const menuItem = menus[activeIndex];
+      return menuItem?.title || "";
     }
     return "";
   };

@@ -71,6 +71,13 @@ interface TaskProps {
   boards: BoardType[];
 }
 
+type AssignMember = {
+  name: string;
+  image: {
+    src: string;
+  };
+};
+
 const Task = ({ task, onUpdateTask, boards }: TaskProps) => {
   const [open, setOpen] = React.useState(false);
   const {
@@ -223,7 +230,7 @@ const Task = ({ task, onUpdateTask, boards }: TaskProps) => {
             >
               {priority}
             </Badge>
-            {tags?.map((tag, i) => (
+            {tags?.map((tag: string, i: number) => (
               <Badge
                 key={`badge-key-ssk-${i}`}
                 color={tagsColorMap[tag]}
@@ -239,7 +246,7 @@ const Task = ({ task, onUpdateTask, boards }: TaskProps) => {
             </div>
             {assign?.length > 0 && (
               <AvatarGroup total={assign?.length} max={3} countClass="w-5 h-5">
-                {assign?.map((member, i) => (
+                {assign?.map((member: AssignMember, i: number) => (
                   <TooltipProvider key={`assign-member-task-${i}`}>
                     <Tooltip>
                       <TooltipTrigger asChild>

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { cn, isLocationMatch, getDynamicPath } from "@/lib/utils";
 import SidebarLogo from "../common/logo";
-import { menusConfig } from "@/config/menus";
+import { menusConfig, MenuItemProps } from "@/config/menus";
 import MenuLabel from "../common/menu-label";
 import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
@@ -44,8 +44,9 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
     let subMenuIndex = null;
     let multiMenuIndex = null;
     menus?.map((item: any, i: number) => {
-      if (item?.child) {
-        item.child.map((childItem: any, j: number) => {
+      const menuItem = item as MenuItemProps & { isHeader?: boolean };
+      if (menuItem?.child) {
+        menuItem.child.map((childItem: any, j: number) => {
           if (isLocationMatch(childItem.href, locationName)) {
             subMenuIndex = i;
           }
@@ -62,7 +63,7 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
     });
     setActiveSubmenu(subMenuIndex);
     setMultiMenu(multiMenuIndex);
-  }, [locationName]);
+  }, [locationName, menus]);
 
   // menu title
 
@@ -94,11 +95,13 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
             " space-y-2 text-center": collapsed,
           })}
         >
-          {menus.map((item, i) => (
+          {menus.map((item, i) => {
+            const menuItem = item as MenuItemProps & { isHeader?: boolean };
+            return (
             <li key={`menu_key_${i}`}>
               {/* single menu  */}
 
-              {!item.child && !item.isHeader && (
+              {!menuItem.child && !menuItem.isHeader && (
                 <SingleMenuItem
                   item={item}
                   collapsed={collapsed}
@@ -107,12 +110,12 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
               )}
 
               {/* menu label */}
-              {item.isHeader && !item.child && !collapsed && (
+              {menuItem.isHeader && !menuItem.child && !collapsed && (
                 <MenuLabel item={item} trans={trans} />
               )}
 
               {/* sub menu */}
-              {item.child && (
+              {menuItem.child && (
                 <>
                   <SubMenuHandler
                     item={item}
@@ -137,7 +140,8 @@ const PopoverSidebar = ({ trans }: { trans: string }) => {
                 </>
               )}
             </li>
-          ))}
+            );
+          })}
         </ul>
         {!collapsed && (
           <div className="-mx-2 ">

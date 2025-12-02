@@ -24,6 +24,13 @@ import Priority from "../common/priority";
 import AssignList from "../common/assign-list";
 import { type Task as TaskType } from "@/app/api/tasks/data";
 
+type AssignMember = {
+  name: string;
+  image: {
+    src: string;
+  };
+};
+
 const SheetActions = ({ task, taskId }: {
   task: TaskType
   taskId: TaskType["id"]
@@ -51,7 +58,7 @@ const SheetActions = ({ task, taskId }: {
                 total={task?.assign?.length}
                 max={3}
               >
-                {task?.assign?.map((member, i) => (
+                {task?.assign?.map((member: AssignMember, i: number) => (
                   <TooltipProvider key={`assign-member-task-${i}`}>
                     <Tooltip>
                       <TooltipTrigger asChild>

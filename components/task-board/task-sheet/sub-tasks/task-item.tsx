@@ -30,12 +30,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeleteConfirmationDialog from "@/components/delete-confirmation-dialog";
 import { type SubTask as SubTaskType } from "@/app/api/tasks/data";
+
+type AssignUser = {
+  image: string;
+  name?: string;
+};
+
 const TaskItem = ({ subtask, handlerSubSheet }: {
   subtask: SubTaskType;
   handlerSubSheet: () => void;
 }) => {
   const { completed, assignDate, id } = subtask;
-  const [isDone, setIsDone] = React.useState<boolean>(completed);
+  const [isDone, setIsDone] = React.useState<boolean>(completed ?? false);
   // update isComplete
   const [open, setOpen] = useState<boolean>(false);
 
@@ -99,7 +105,7 @@ const TaskItem = ({ subtask, handlerSubSheet }: {
                     total={subtask.assign.length}
                     countClass="w-7 h-7"
                   >
-                    {subtask.assign?.map((user, i) => (
+                    {subtask.assign?.map((user: AssignUser, i: number) => (
                       <Avatar
                         className=" ring-1 ring-background ring-offset-[2px]  ring-offset-background h-7 w-7"
                         key={`avatar-key-${i}`}

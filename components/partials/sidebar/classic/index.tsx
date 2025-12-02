@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { cn, isLocationMatch, getDynamicPath } from "@/lib/utils";
 import { useSidebar, useThemeStore } from "@/store";
 import SidebarLogo from "../common/logo";
-import { menusConfig } from "@/config/menus";
+import { menusConfig, MenuItemProps } from "@/config/menus";
 import MenuLabel from "../common/menu-label";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -98,11 +98,13 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
             "text-start": collapsed && hovered,
           })}
         >
-          {menus.map((item, i) => (
+          {menus.map((item, i) => {
+            const menuItem = item as MenuItemProps & { isHeader?: boolean };
+            return (
             <li key={`menu_key_${i}`}>
               {/* single menu  */}
 
-              {!item.child && !item.isHeader && (
+              {!menuItem.child && !menuItem.isHeader && (
                 <SingleMenuItem
                   item={item}
                   collapsed={collapsed}
@@ -112,12 +114,12 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
               )}
 
               {/* menu label */}
-              {item.isHeader && !item.child && (!collapsed || hovered) && (
+              {menuItem.isHeader && !menuItem.child && (!collapsed || hovered) && (
                 <MenuLabel item={item} trans={trans} />
               )}
 
               {/* sub menu */}
-              {item.child && (
+              {menuItem.child && (
                 <>
                   <SubMenuHandler
                     item={item}
@@ -144,7 +146,8 @@ const ClassicSidebar = ({ trans }: { trans: string }) => {
                 </>
               )}
             </li>
-          ))}
+            );
+          })}
         </ul>
         {!collapsed && (
           <div className="-mx-2 ">
